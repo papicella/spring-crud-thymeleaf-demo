@@ -3,9 +3,9 @@
 ## Table of Contents
 
 * [Run Locally](#run-locally)
-* [Build using Tanzu Build Service](#tanzu-build-service)
-* [Deploy to TAS4K8S - Docker Push](#tas4k8s-docker-push)
-* [Deploy to TAS4K8S - Source Artifact Push](#tas4k8s-source-push)
+* [Build using Tanzu Build Service](#build-using-tanzu-build-service)
+* [Deploy to TAS4K8S - Docker Push](#deploy-to-tas4k8s---docker-push)
+* [Deploy to TAS4K8S - Source Artifact Push](#deploy-to-tas4k8s---source-artifact-push)
 
 ## Run Locally 
 
