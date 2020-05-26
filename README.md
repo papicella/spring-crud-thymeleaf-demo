@@ -5,18 +5,18 @@
 * [Run Locally](#run-locally)
 * [Build using Tanzu Build Service](#tanzu-build-service)
 * [Deploy to TAS4K8S - Docker Push](#tas4k8s-docker-push)
-* [Deploy to TAS4K8S - Source Push](#tas4k8s-source-push)
+* [Deploy to TAS4K8S - Source Artifact Push](#tas4k8s-source-push)
 
 ## Run Locally 
 
-Clone or Fork repository as follows
+Clone or Fork repository as follows.
 
 ```
 $ git clone https://github.com/papicella/spring-crud-thymeleaf-demo.git
 $ cd spring-crud-thymeleaf-demo
 ```
 
-Build/Package as shown below
+Build/Package as shown below.
 
 ```
 $ ./mvnw -D skipTests package
@@ -102,15 +102,151 @@ Build    Status     Started Time           Finished Time          Reason    Dige
 
 For this step you will need TAS4K8S beta installed which can be downloaded and installed using the two link below.
 
+* https://network.pivotal.io/products/tas-for-kubernetes/
+* https://docs.pivotal.io/tas-kubernetes/0-1/
+
+Ensure your using the latest CF CLI which can be obtained using this link - https://github.com/cloudfoundry/cli
+
+```
+$ cf version
+cf version 6.51.0+2acd15650.2020-04-07
+```
 
 Target your API endpoint as shown below
 
 ```
+$ cf api https://api.system.run.haas-210.pez.pivotal.io --skip-ssl-validation
+Setting api endpoint to https://api.system.run.haas-210.pez.pivotal.io...
+OK
 
+api endpoint:   https://api.system.run.haas-210.pez.pivotal.io
+api version:    2.148.0
 ```
 
+Login as follows you will need a username / password.
 
-## Deploy to TAS4K8S - Source Push
+```
+$ cf auth admin UAA_ADMIN_PASSWORD_REPLACE
+$ cf target -o system
+$ cf create-space development
+$ cf target -s development
+```
+
+Enable diego docker flag to push from a docker image.
+
+```
+$ cf enable-feature-flag diego_docker
+Setting status of diego_docker as admin...
+
+OK
+
+Feature diego_docker Enabled.
+```
+
+Push application as shown below.
+
+```
+$ cf push my-springboot-app --docker-image pasapples/spring-crud-thymeleaf-demo -i 1 -m 1g
+Pushing app my-springboot-app to org system / space development as admin...
+Getting app info...
+Creating app with these attributes...
++ name:           my-springboot-app
++ docker image:   pasapples/spring-crud-thymeleaf-demo
++ instances:      1
++ memory:         1G
+  routes:
++   my-springboot-app.system.run.haas-210.pez.pivotal.io
+
+Creating app my-springboot-app...
+Mapping routes...
+
+Staging app and tracing logs...
+
+Waiting for app to start...
+
+name:                my-springboot-app
+requested state:     started
+isolation segment:   placeholder
+routes:              my-springboot-app.system.run.haas-210.pez.pivotal.io
+last uploaded:       Tue 26 May 10:53:14 AEST 2020
+stack:
+docker image:        pasapples/spring-crud-thymeleaf-demo
+
+type:           web
+instances:      1/1
+memory usage:   1024M
+     state     since                  cpu    memory    disk      details
+#0   running   2020-05-26T00:53:16Z   0.0%   0 of 1G   0 of 1G
+```
+
+Access in browser as shown below.
+
+![alt tag](https://i.ibb.co/Ms18zpW/spring-crud-thymeleaf-2.png)
+
+## Deploy to TAS4K8S - Source Artifact Push
+
+From the previously cloned or forked GitHub project above (https://github.com/papicella/spring-crud-thymeleaf-demo) create a manifest.yaml file as shown below.
+
+```
+$ cat manifest.yml
+---
+applications:
+- name: my-springboot-app
+  memory: 1024M
+  instances: 1
+  path: ./target/spring-crud-thymeleaf-demo-0.0.1-SNAPSHOT.jar
+```
+
+Delete application if it exists
+
+```
+$ cf delete -f my-springboot-app
+Deleting app my-springboot-app in org system / space development as admin...
+OK
+```
+
+Deploy using built artifact as shown below.
+
+```
+$ cf push -f manifest.yml
+Pushing from manifest to org system / space development as admin...
+Using manifest file /Users/papicella/piv-projects/Baeldung-DEMOS/spring-crud-thymeleaf-demo/manifest.yml
+Getting app info...
+Creating app with these attributes...
++ name:        my-springboot-app
+  path:        /Users/papicella/pivotal/DemoProjects/spring-starter/pivotal/Baeldung-DEMOS/spring-crud-thymeleaf-demo/target/spring-crud-thymeleaf-demo-0.0.1-SNAPSHOT.jar
++ instances:   1
++ memory:      1G
+  routes:
++   my-springboot-app.system.run.haas-210.pez.pivotal.io
+
+Creating app my-springboot-app...
+Mapping routes...
+Comparing local files to remote cache...
+Packaging files to upload...
+Uploading files...
+ 34.24 MiB / 34.24 MiB [===============================================================================================================================================================================================================================] 100.00% 32s
+
+Waiting for API to complete processing files...
+
+Staging app and tracing logs...
+
+Waiting for app to start...
+
+name:                my-springboot-app
+requested state:     started
+isolation segment:   placeholder
+routes:              my-springboot-app.system.run.haas-210.pez.pivotal.io
+last uploaded:       Tue 26 May 11:30:06 AEST 2020
+stack:
+buildpacks:
+
+type:           web
+instances:      1/1
+memory usage:   1024M
+     state     since                  cpu    memory    disk      details
+#0   running   2020-05-26T01:30:32Z   0.0%   0 of 1G   0 of 1G
+```
 
 <hr size=2 />
 Pas Apicella [pasa at vmware.com] is an Advisory Application Platform Architect at VMware APJ 
