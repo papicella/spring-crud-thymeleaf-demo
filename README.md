@@ -1,5 +1,12 @@
 # Spring Boot Crud JPA Thymeleaf demo
 
+Basic Springboot demo for TAS4K8s
+
+## Prerequisites
+
+* CF CLI installed - https://github.com/cloudfoundry/cli
+* TAS4K8s installed - https://network.pivotal.io/products/tas-for-kubernetes/
+
 ## Table of Contents
 
 * [Run Locally](#run-locally)
