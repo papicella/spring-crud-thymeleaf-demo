@@ -11,20 +11,20 @@
 
 Clone or Fork repository as follows.
 
-```
+``` bash
 $ git clone https://github.com/papicella/spring-crud-thymeleaf-demo.git
 $ cd spring-crud-thymeleaf-demo
 ```
 
 Build/Package as shown below.
 
-```
+```bash
 $ ./mvnw -D skipTests package
 ```
 
 Run as shown below accessing in a browser using - [http://localhost:8080/]
 
-```
+```bash
 $ ./mvnw spring-boot:run
 ....
 2020-05-26 09:39:32.849  INFO 66462 --- [           main] p.s.d.SpringCrudThymeleafDemoApplication : Started SpringCrudThymeleafDemoApplication in 2.241 seconds (JVM running for 2.522)
@@ -43,14 +43,14 @@ For more information on how to install / use Tanzu Build service use the link as
 
 Create a project and target that project 
 
-```
+```bash
 pb project create papicella
 pb project target papicella
 ```
 
 Create a registry secret and repository secret as shown below.
 
-```
+```bash
 $ cat repository.yaml
 repository: github.com
 username: GIT_USER_REPLACE
@@ -67,7 +67,7 @@ $ pb secrets registry apply -f registry-dockerhub.yaml
 
 Apply image configuration as shown below.
 
-```
+```bash
 $ cat spring-crud-thymeleaf-dockerhub.yaml
 source:
   git:
@@ -85,13 +85,13 @@ $ pb image apply -f spring-crud-thymeleaf-dockerhub.yam
 
 View logs of build as follows.
 
-```
+```bash
 $ pb image logs index.docker.io/pasapples/spring-crud-thymeleaf-demo -b 1 -f
 ```
 
 View image build once complete
 
-```
+```bash
 $ pb image builds index.docker.io/pasapples/spring-crud-thymeleaf-demo
 Build    Status     Started Time           Finished Time          Reason    Digest
 -----    ------     ------------           -------------          ------    ------
@@ -107,14 +107,14 @@ For this step you will need TAS4K8S beta installed which can be downloaded and i
 
 Ensure your using the latest CF CLI which can be obtained using this link - https://github.com/cloudfoundry/cli
 
-```
+```bash
 $ cf version
 cf version 6.51.0+2acd15650.2020-04-07
 ```
 
 Target your API endpoint as shown below
 
-```
+```bash
 $ cf api https://api.system.run.haas-210.pez.pivotal.io --skip-ssl-validation
 Setting api endpoint to https://api.system.run.haas-210.pez.pivotal.io...
 OK
@@ -125,7 +125,7 @@ api version:    2.148.0
 
 Login as follows you will need a username / password.
 
-```
+```bash
 $ cf auth admin UAA_ADMIN_PASSWORD_REPLACE
 $ cf target -o system
 $ cf create-space development
@@ -134,7 +134,7 @@ $ cf target -s development
 
 Enable diego docker flag to push from a docker image.
 
-```
+```bash
 $ cf enable-feature-flag diego_docker
 Setting status of diego_docker as admin...
 
@@ -145,7 +145,7 @@ Feature diego_docker Enabled.
 
 Push application as shown below.
 
-```
+```bash
 $ cf push my-springboot-app --docker-image pasapples/spring-crud-thymeleaf-demo -i 1 -m 1g
 Pushing app my-springboot-app to org system / space development as admin...
 Getting app info...
@@ -187,7 +187,7 @@ Access in browser as shown below.
 
 From the previously cloned or forked GitHub project above (https://github.com/papicella/spring-crud-thymeleaf-demo) create a manifest.yaml file as shown below.
 
-```
+```bash
 $ cat manifest.yml
 ---
 applications:
@@ -199,7 +199,7 @@ applications:
 
 Delete application if it exists
 
-```
+```bash
 $ cf delete -f my-springboot-app
 Deleting app my-springboot-app in org system / space development as admin...
 OK
@@ -207,7 +207,7 @@ OK
 
 Deploy using built artifact as shown below.
 
-```
+```bash
 $ cf push -f manifest.yml
 Pushing from manifest to org system / space development as admin...
 Using manifest file /Users/papicella/piv-projects/Baeldung-DEMOS/spring-crud-thymeleaf-demo/manifest.yml
